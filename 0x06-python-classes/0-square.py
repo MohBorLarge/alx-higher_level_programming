@@ -1,8 +1,7 @@
 #!/usr/bin/python3
-
-"""Define a class Square."""
+"""defines an empity class"""
 
 
 class Square:
-    """Represent a square."""
+    """empity class"""
     pass
