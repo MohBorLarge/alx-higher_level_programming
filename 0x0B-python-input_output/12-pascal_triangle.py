@@ -1,21 +1,19 @@
 #!/usr/bin/python3
-"""Pascal's triangle
+"""
+Module for pascal_triangle method.
 """
 
 
 def pascal_triangle(n):
-    """returns a list of intergers representing the
-    pascal's triangle of n"""
-    if n <= 0:
-        return []
-    a = [[] for i in range(n)]
-    for i in range(n):
-        for j in range(i + 1):
-            if j < i:
-                if j == 0:
-                    a[i].append(1)
-                else:
-                    a[i].append(a[i - 1][j] + a[i - 1][j - 1])
-            elif j == i:
-                a[i].append(1)
-    return a
+    """
+    returns a list of lists of integers
+        Args:
+            n (int): number of lists and digits
+        Returns: list of lists
+
+    """
+    rows = [[1 for j in range(i + 1)] for i in range(n)]
+    for n in range(n):
+        for i in range(n - 1):
+            rows[n][i + 1] = sum(rows[n - 1][i:i + 2])
+    return rows

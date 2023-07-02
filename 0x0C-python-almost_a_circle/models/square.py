@@ -1,89 +1,75 @@
 #!/usr/bin/python3
-""" Square module """
-
-
-from models.base import Base
+"""
+Square Module
+"""
 from models.rectangle import Rectangle
 
 
 class Square(Rectangle):
-    """ Square class """
+    """Sqare Class
+    """
 
-    def __init__(self, prmSize, prmX=0, prmY=0, prmId=None):
+    def __init__(self, size, x=0, y=0, id=None):
+        """initialize method
+        args:
+            size: square size
+            x: x position
+            y: y position
+            id: object id
         """
-            Constructor function
-
-            Args:
-                prmWidth:  width
-                prmHeight: height
-                prmX:      left margin
-                prmY:      top margin
-                prmId:     id
-        """
-        super().__init__(
-            prmWidth=prmSize,
-            prmHeight=prmSize,
-            prmX=prmX,
-            prmY=prmY,
-            prmId=prmId
-        )
+        super().__init__(size, size, x, y, id)
 
     def __str__(self):
+        """print method
+        return:
+            formatted list
         """
-            Function that return a string representation of the square
-        """
-        return "[Square] ({:d}) {:d}/{:d} - {:d}".format(
-            self.id,
-            self.x,
-            self.y,
-            self.width
-        )
+        return ("[{}] ({}) {}/{} - {}".format(self.__class__.__name__,
+                                              self.id, self.x,
+                                              self.y, self.width))
 
     @property
     def size(self):
-        """ y getter """
+        """width getter method
+        return:
+            size of width and height
+        """
         return self.width
 
     @size.setter
-    def size(self, prmValue):
-        """ size setter """
-        Base.strict_integer_validation("size", prmValue)
-        self.width = prmValue
-        self.height = prmValue
-
-    def update(self, *prmArgs, **prmKArgs):
+    def size(self, value):
+        """width and height setter method
+        args:
+            value: size value
+        return:
+            na
         """
-            Function that assigns an argument to each attribute
+        self.width = value
+        self.height = value
 
-            Args:
-                prmArgs: argument's array
-                prmKArgs: argument's dictionary
+    def update(self, *args, **kwargs):
+        """update square method
+        args:
+            args: pointer to arguments
+            kwargs: double pointer to key word arguments
+        return:
+            na
         """
-        if len(prmArgs) > 0:
-            if len(prmArgs) > 0:
-                self.strict_integer_validation("id", prmArgs[0])
-                self.id = prmArgs[0]
-            if len(prmArgs) > 1:
-                self.width = prmArgs[1]
-                self.height = prmArgs[1]
-            if len(prmArgs) > 2:
-                self.x = prmArgs[2]
-            if len(prmArgs) > 3:
-                self.y = prmArgs[3]
+
+        if args:
+            i = 0
+            listme = ['id', 'size', 'x', 'y']
+            for arg in args:
+                setattr(self, listme[i], arg)
+                i += 1
+            return
         else:
-            if "id" in prmKArgs:
-                self.strict_integer_validation("id", prmKArgs["id"])
-                self.id = prmKArgs["id"]
-            if "size" in prmKArgs:
-                self.width = prmKArgs["size"]
-                self.height = prmKArgs["size"]
-            if "x" in prmKArgs:
-                self.x = prmKArgs["x"]
-            if "y" in prmKArgs:
-                self.y = prmKArgs["y"]
+            for key, value in kwargs.items():
+                setattr(self, key, value)
 
     def to_dictionary(self):
+        """returns a dictionary of Square
+        return:
+            dictionary
         """
-            Function that returns the dictionary representation of the instance
-        """
-        return {"x": self.x, "y": self.y, "id": self.id, "size": self.size}
+        return {'id': self.id, 'x': self.x, 'size': self.size, 'y': self.y}

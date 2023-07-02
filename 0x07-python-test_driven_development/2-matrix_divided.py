@@ -1,32 +1,42 @@
 #!/usr/bin/python3
 """
-Module 2-matrix_divided
-Contain one mthod that divided the element of
-The same size of int or float matrix
-Return the dividened number rouneded to two decimal place
+    2-matrix_divided Module
 """
 
 
 def matrix_divided(matrix, div):
-    """Return new matrix with dividened"""
+    """
+        Divides all elements of a matrix
 
-    message = "matrix must be a matrix (list of lists) of integers/floats"
-    message_one = "Each row of the matrix must have the same size"
+        Args:
+            matrix: intial 2D list
+            div: integer which is the divisor
 
-    if type(matrix) is not list or len(matrix) == 0 or len(matrix[0]) == 0:
-        raise TypeError(message)
-    for rows in matrix:
-        if type(rows) is not list:
-            raise TypeError(message)
-        for i in rows:
-            if type(i) is not int and type(i) is not float:
-                raise TypeError(message)
-    samelen = len(matrix[0])
-    for row in matrix:
-        if samelen != len(row):
-            raise TypeError(message_one)
+        Returns:
+            New matrix containing the divided elements
+            rounded to 2 decimal places
+    """
+    prev_len = 0
+    error_mess = "matrix must be a matrix (list of lists) of integers/floats"
+    if type(matrix) is not list:
+        raise TypeError(error_mess)
+
+    for block in matrix:    # matrix is a list
+        if type(block) is not list:
+            raise TypeError(error_mess)
+
+        for element in block:
+            if type(element) is not int and type(element) is not float:
+                raise TypeError(error_mess)
+
+        if len(block) != prev_len and prev_len != 0:
+            raise TypeError("Each row of the matrix must have the same size")
+        prev_len = len(block)
+
     if type(div) is not int and type(div) is not float:
         raise TypeError("div must be a number")
+
     if div == 0:
         raise ZeroDivisionError("division by zero")
-    return [[round(i / div, 2) for i in rows] for rows in matrix]
+
+    return [[round(elem / div, 2) for elem in row] for row in matrix]

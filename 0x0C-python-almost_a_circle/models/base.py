@@ -1,204 +1,105 @@
 #!/usr/bin/python3
-""" Base module """
-
-import csv
+"""
+Class Module
+"""
 import json
-import os
 
 
 class Base:
-    """ Base class """
+    """ base class
+    Attributes:
+        _nb_objects: number of objects created
+        id: id of object
+    """
     __nb_objects = 0
-    id = 0
 
-    def __init__(self, prmId=None):
+    def __init__(self, id=None):
+        """initiation method
+        args:
+            id: id of object
         """
-            Constructor
-
-            Args:
-                prmId: id
-        """
-        if None is not prmId:
-            self.id = prmId
+        if id is not None:
+            self.id = id
         else:
             Base.__nb_objects += 1
             self.id = Base.__nb_objects
 
-    @staticmethod
-    def strict_integer_validation(prmName, prmValue):
-        """
-            strict integer validation
+    def integer_validator(self, name, value):
+        """check if value is an integer"""
+        if type(value) is not int:
+            raise TypeError('{} must be an integer'.format(name))
+        if value <= 0:
+            raise ValueError('{} must be > 0'.format(name))
 
-            Args:
-                prmName: name of the variable
-                prmValue: value of the variable
-        """
-        if type(prmValue) is not int:
-            raise TypeError("{} must be an integer".format(prmName))
-        if prmValue <= 0:
-            raise ValueError("{} must be > 0".format(prmName))
-
-    @staticmethod
-    def integer_validation(prmName, prmValue):
-        """
-            variable integer validation
-
-            Args:
-                prmName: name of the variable
-                prmValue: value of the variable
-        """
-        if type(prmValue) is not int:
-            raise TypeError("{} must be an integer".format(prmName))
-        if prmValue < 0:
-            raise ValueError("{} must be >= 0".format(prmName))
+    def integer_validator2(self, name, value):
+        """check if value is an integer"""
+        if type(value) is not int:
+            raise TypeError('{} must be an integer'.format(name))
+        if value < 0:
+            raise ValueError('{} must be >= 0'.format(name))
 
     @staticmethod
     def to_json_string(list_dictionaries):
+        """returns JSON string
+        args:
+            list_dictionaries: list of dictionaries
+        return:
+            return serialized list or empty list
         """
-            Function that return  the JSON string representation
-            of a dictionary
-        """
-        if None is list_dictionaries or len(list_dictionaries) == 0:
-            return "[]"
+        return json.dumps(list_dictionaries or [])
 
-        return json.dumps(list_dictionaries)
-
-    @classmethod
-    def save_to_file(cls, prmObjects):
-        """
-            Function that writes the JSON string representation
-            of object list in a file
-        """
-        fileName = "{}.json".format(cls.__name__)
-        list = []
-
-        if prmObjects is None or len(prmObjects) == 0:
-            prmObjects = []
-
-        with open(fileName, 'w', encoding="UTF-8") as file:
-            for elem in prmObjects:
-                list.append(elem.to_dictionary())
-            file.write(Base.to_json_string(list))
-        file.closed
-
+    @staticmethod
     def from_json_string(json_string):
+        """json to string static method
+        args:
+            json_string: json object string type
+        return:
+            list of json strings
         """
-            Function that returns the list of the JSON string representation
-        """
-        if json_string is None or len(json_string) == 0:
-            return []
-
-        return json.loads(json_string)
-
-    @classmethod
-    def create(cls, **dictionary):
-        """
-            Function that returns an instance with all attributes already set
-        """
-        from models.rectangle import Rectangle
-        from models.square import Square
-
-        if cls == Rectangle:
-            obj = cls(1, 1)
-        elif cls == Square:
-            obj = cls(1)
-
-        obj.update(**dictionary)
-        return obj
-
-    @classmethod
-    def load_from_file(cls):
-        """
-            Function returns a list of instances
-        """
-        fileName = "{}.json".format(cls.__name__)
-        if os.path.isfile(fileName):
-            with open(fileName, "r") as file:
-                list_output = cls.from_json_string(file.read())
-                return [cls.create(**dict) for dict in list_output]
-
+        if json_string:
+            return json.loads(json_string)
         return []
 
     @classmethod
-    def save_to_file_csv(cls, prmObjects):
+    def save_to_file(cls, list_objs):
+        """writes JSON string to a file
+        args:
+            list_objs: list of objects
+        return:
+            na
         """
-            Function that writes the JSON string representation
-            of object list in a file
-        """
-        from models.rectangle import Rectangle
-        from models.square import Square
-
-        fileName = "{}.csv".format(cls.__name__)
-
-        if prmObjects is None or len(prmObjects) == 0:
-            prmObjects = []
-
-        with open(fileName, 'w', encoding="UTF-8") as file:
-            writer = csv.writer(file)
-            for elem in prmObjects:
-                if Rectangle is cls:
-                    writer.writerow(
-                        (elem.id, elem.width, elem.height, elem.x, elem.y)
-                    )
-                if Square is cls:
-                    writer.writerow((elem.id, elem.size, elem.x, elem.y))
-        file.closed
+        if list_objs:
+            j = cls.to_json_string([obj.to_dictionary() for obj in list_objs])
+        else:
+            j = '[]'
+        with open(cls.__name__ + '.json', 'w') as f:
+            f.write(j)
 
     @classmethod
-    def load_from_file_csv(cls):
+    def create(cls, **dictionary):
+        """return instance with all attributes set
+        args:
+            dictionary: double pointer
+        return:
+            instance with set attribute
         """
-            Function that load list of instance from csv file
-        """
-        from models.rectangle import Rectangle
-        from models.square import Square
+        if cls.__name__ == "Rectangle":
+            dummy = cls(1, 1)
+        if cls.__name__ == "Square":
+            dummy = cls(1)
+        dummy.update(**dictionary)
+        return dummy
 
-        fileName = "{}.csv".format(cls.__name__)
-        list = []
-        if os.path.isfile(fileName):
-            with open(fileName, "r") as file:
-                reader = csv.reader(file)
-                for row in reader:
-                    if Rectangle is cls:
-                        dictionary = {
-                            "id": int(row[0]),
-                            "width": int(row[1]),
-                            "height": int(row[2]),
-                            "x": int(row[3]),
-                            "y": int(row[4])
-                        }
-                    if Square is cls:
-                        dictionary = {
-                            "id": int(row[0]),
-                            "size": int(row[1]),
-                            "x": int(row[2]),
-                            "y": int(row[3])
-                        }
-                    instance = cls.create(**dictionary)
-                    list.append(instance)
-            return list
-        return list
-
-    def draw(list_rectangles, list_squares):
-        """
-            Function that draw rectangle list
-        """
-        import turtle
-
-        turtle.pencolor("white")
-        turtle.bgcolor("#2E3561")
-        for elem in list_rectangles:
-            turtle.forward(elem.width)
-            turtle.right(90)
-            turtle.forward(elem.height)
-            turtle.right(90)
-            turtle.forward(elem.width)
-            turtle.right(90)
-            turtle.forward(elem.height)
-        for elem in list_squares:
-            turtle.forward(elem.width)
-            turtle.right(90)
-            turtle.forward(elem.height)
-            turtle.right(90)
-            turtle.forward(elem.width)
-            turtle.right(90)
-            turtle.forward(elem.height)
+    @classmethod
+    def load_from_file(cls):
+        '''Returns a list of instances
+        return:
+            list of instance json string
+        '''
+        try:
+            filename = cls.__name__ + '.json'
+            with open(filename, mode='r') as f:
+                d = cls.from_json_string(f.read())
+            return [cls.create(**x) for x in d]
+        except FileNotFoundError:
+            return []

@@ -1,16 +1,11 @@
 #!/usr/bin/python3
 """
-===================================
-module with class BaseGeometry
-===================================
+This is a module container of the function 5-base_geometry.py
 """
 
 
 class BaseGeometry:
-    """BaseGeometry class"""
-
-    @classmethod
+    """A class with public attribute area"""
     def area(self):
-        """method for calculated area"""
-
+        """raises an exception when called"""
         raise Exception("area() is not implemented")

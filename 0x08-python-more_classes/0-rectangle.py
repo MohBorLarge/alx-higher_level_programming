@@ -1,13 +1,9 @@
 #!/usr/bin/python3
-
 """
-File: 0-rectangle.py
-Desc: This file contains a simple class defination called Rectangle
+Defines an empty class Rectangle
 """
 
 
-class Rectangle():
-    """
-    This is an empty class defination called Rectangle.
-    """
+class Rectangle:
+    """Empty representation of a rectangle"""
     pass

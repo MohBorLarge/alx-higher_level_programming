@@ -1,21 +1,16 @@
 #!/usr/bin/python3
 """
-    100-my_int: class MyInt implements int
+Contains definition of class MyInt
 """
 
 
 class MyInt(int):
-    """
-        MyInt implements int. (inherits from)
-    """
-    def __init__(self, number):
-        self.number = number
+    """Definition of class MyInt that inherits from class int"""
 
-    def __ne__(self, value):
-        return (self.number == value)
+    def __eq__(self, other):
+        """Overrides equals, inverting it"""
+        return int(self) != int(other)
 
-    def __eq__(self, value):
-        return (self.number != value)
-
-    def __str__(self):
-        return (str(self.number))
+    def __ne__(self, other):
+        """Overrides not-equals, inverting it"""
+        return int(self) == int(other)

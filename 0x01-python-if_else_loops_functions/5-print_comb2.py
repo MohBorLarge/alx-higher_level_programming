@@ -1,3 +1,4 @@
 #!/usr/bin/python3
-for i in range(0, 100):
-    print("{:02d}".format(i), end=", " if i < 99 else "\n")
+for index in range(0, 99):
+    print("{:02d}".format(index), end=', ')
+print("{:02d}".format(index + 1))

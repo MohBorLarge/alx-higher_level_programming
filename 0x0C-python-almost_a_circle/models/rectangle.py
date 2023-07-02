@@ -1,143 +1,104 @@
 #!/usr/bin/python3
-""" Rectangle module """
-
-
+"""
+Class Module
+"""
 from models.base import Base
 
 
 class Rectangle(Base):
-    """ Rectangle class """
-    __height = None
-    __width = None
-    __x = None
-    __y = None
+    """Rectangle subclass"""
 
-    def __init__(self, prmWidth, prmHeight, prmX=0, prmY=0, prmId=None):
+    def __init__(self, width, height, x=0, y=0, id=None):
+        """instance initialization method
+
+        args:
+            width: width of rectangle
+            height: height of rectangle
+            x: init variable
+            y: init variable
         """
-            Constructor
-
-            Args:
-                prmId: id
-        """
-        super().__init__(prmId=prmId)
-        self.width = prmWidth
-        self.height = prmHeight
-        self.x = prmX
-        self.y = prmY
-
-    @property
-    def height(self):
-        """ height getter """
-        return self.__height
-
-    @height.setter
-    def height(self, prmValue):
-        """ height setter """
-        Base.strict_integer_validation("height", prmValue)
-        self.__height = prmValue
-
-    @property
-    def width(self):
-        """ width getter """
-        return self.__width
-
-    @width.setter
-    def width(self, prmValue):
-        """ width setter """
-        Base.strict_integer_validation("width", prmValue)
-        self.__width = prmValue
-
-    @property
-    def x(self):
-        """ x getter """
-        return self.__x
-
-    @x.setter
-    def x(self, prmValue):
-        """ x setter """
-        Base.integer_validation("x", prmValue)
-        self.__x = prmValue
-
-    @property
-    def y(self):
-        """ y getter """
-        return self.__y
-
-    @y.setter
-    def y(self, prmValue):
-        """ y setter """
-        Base.integer_validation("y", prmValue)
-        self.__y = prmValue
+        super().__init__(id)
+        self.width = width
+        self.height = height
+        self.x = x
+        self.y = y
 
     def area(self):
-        """
-            Function that return area of a rectangle
-        """
+        """return area of width & height"""
         return self.width * self.height
 
+    def update(self, *args, **kwargs):
+        """update attributes"""
+        if args:
+            listme = ['id', 'width', 'height', 'x', 'y']
+            i = 0
+            for arg in args:
+                setattr(self, listme[i], arg)
+                i += 1
+        else:
+            for key, value in kwargs.items():
+                setattr(self, key, value)
+
     def display(self):
-        """
-            Function that print in stdout the instance with the character
-            # by taking care of x and y
+        """print into stdout
+        return: na
         """
         for row in range(self.y):
             print()
         for row in range(self.height):
-            print(" " * self.x + "#" * self.width)
+            print("{}{}".format(" " * self.x, "#" * self.width))
 
     def __str__(self):
-        """
-            Function that return a string representation of the rectangle
-        """
-        return "[Rectangle] ({:d}) {:d}/{:d} - {:d}/{:d}".format(
-            self.id,
-            self.x,
-            self.y,
-            self.width,
-            self.height
-        )
-
-    def update(self, *prmArgs, **prmKArgs):
-        """
-            Function that assigns an argument to each attribute
-
-            Args:
-                prmArgs: argument's array
-                prmKArgs: argument's dictionary
-        """
-        if len(prmArgs) > 0:
-            if len(prmArgs) > 0:
-                self.strict_integer_validation("id", prmArgs[0])
-                self.id = prmArgs[0]
-            if len(prmArgs) > 1:
-                self.width = prmArgs[1]
-            if len(prmArgs) > 2:
-                self.height = prmArgs[2]
-            if len(prmArgs) > 3:
-                self.x = prmArgs[3]
-            if len(prmArgs) > 4:
-                self.y = prmArgs[4]
-        else:
-            if "id" in prmKArgs:
-                self.strict_integer_validation("id", prmKArgs["id"])
-                self.id = prmKArgs["id"]
-            if "width" in prmKArgs:
-                self.width = prmKArgs["width"]
-            if "height" in prmKArgs:
-                self.height = prmKArgs["height"]
-            if "x" in prmKArgs:
-                self.x = prmKArgs["x"]
-            if "y" in prmKArgs:
-                self.y = prmKArgs["y"]
+        """print method"""
+        return "[{}] ({}) {}/{} - {}/{}".format(self.__class__.__name__,
+                                                self.id, self.__x, self.__y,
+                                                self.__width, self.__height)
 
     def to_dictionary(self):
-        """
-            Function that returns the dictionary representation of the instance
-        """
-        return {
-            "x": self.x,
-            "y": self.y,
-            "id": self.id,
-            "height": self.height,
-            "width": self.width
-        }
+        """return dict representation of Rectangle"""
+        return {'x': self.x, 'y': self.y, 'id': self.id,
+                'height': self.height, 'width': self.width}
+
+    @property
+    def width(self):
+        """width getter method"""
+        return self.__width
+
+    @width.setter
+    def width(self, value):
+        """width setter method"""
+        self.integer_validator('width', value)
+        self.__width = value
+
+    @property
+    def height(self):
+        """height getter method"""
+        return self.__height
+
+    @height.setter
+    def height(self, value):
+        """height setter method"""
+        self.integer_validator('height', value)
+        self.__height = value
+
+    @property
+    def x(self):
+        """x getter method"""
+        return self.__x
+
+    @x.setter
+    def x(self, value):
+        """x setter method"""
+        self.integer_validator2('x', value)
+        self.__x = value
+
+    @property
+    def y(self):
+        """y getter method"""
+        return self.__y
+
+    @y.setter
+    def y(self, value):
+        """y setter method"""
+        self.integer_validator2('y', value)
+        self.__y = value
